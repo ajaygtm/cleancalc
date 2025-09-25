@@ -10,4 +10,7 @@ A clean, minimal popup calculator for Firefox. Calm beige palette, crisp typogra
 - Copy result button
 - Persistent state (expression + last result + history)
 
+## Changelog
+See [CHANGELOG.md](CHANGELOG.md)
+
 MIT Licensed.

@@ -6,11 +6,12 @@
   <link rel="stylesheet" href="styles.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 </head>
-<body>
+<body data-theme="blue">
   <div id="app" class="app">
     <header class="top-bar">
       <div class="brand">CleanCalc</div>
       <div class="actions">
+        <button id="themeToggle" class="icon-btn" title="Switch theme" aria-label="Switch theme">Beige</button>
         <button id="historyToggle" class="icon-btn" title="Toggle History" aria-label="Toggle history">≡</button>
         <button id="clearAll" class="icon-btn" title="Clear All" aria-label="Clear all">⌫</button>
       </div>
@@ -58,7 +59,7 @@
 
     <footer class="foot">
       <button id="copyResult" class="mini-btn" aria-label="Copy result">Copy</button>
-      <span class="tiny">v0.1.0</span>
+      <span class="tiny">v0.1.1</span>
     </footer>
   </div>
   <script src="math.js"></script>
