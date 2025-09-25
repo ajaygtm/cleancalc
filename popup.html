@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>CleanCalc</title>
+  <link rel="stylesheet" href="styles.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+<body>
+  <div id="app" class="app">
+    <header class="top-bar">
+      <div class="brand">CleanCalc</div>
+      <div class="actions">
+        <button id="historyToggle" class="icon-btn" title="Toggle History" aria-label="Toggle history">≡</button>
+        <button id="clearAll" class="icon-btn" title="Clear All" aria-label="Clear all">⌫</button>
+      </div>
+    </header>
+
+    <div class="display-wrapper">
+      <div id="expression" class="expression" role="textbox" aria-label="Expression" tabindex="0"></div>
+      <div id="result" class="result" aria-live="polite">0</div>
+    </div>
+
+    <div id="historyPanel" class="history hidden" aria-label="History" tabindex="0">
+      <div class="history-header">
+        <span>History</span>
+        <button id="clearHistory" class="mini-btn" aria-label="Clear history">Clear</button>
+      </div>
+      <ul id="historyList"></ul>
+    </div>
+
+    <div class="keypad">
+      <button data-val="(">(</button>
+      <button data-val=")">)</button>
+      <button data-act="percent">%</button>
+      <button data-act="clear" class="danger">C</button>
+
+      <button data-val="7">7</button>
+      <button data-val="8">8</button>
+      <button data-val="9">9</button>
+      <button data-val="/" class="op">÷</button>
+
+      <button data-val="4">4</button>
+      <button data-val="5">5</button>
+      <button data-val="6">6</button>
+      <button data-val="*" class="op">×</button>
+
+      <button data-val="1">1</button>
+      <button data-val="2">2</button>
+      <button data-val="3">3</button>
+      <button data-val="-" class="op">−</button>
+
+      <button data-val="0">0</button>
+      <button data-val=".">.</button>
+      <button id="equals" data-act="equals" class="equals">=</button>
+      <button data-val="+" class="op">+</button>
+    </div>
+
+    <footer class="foot">
+      <button id="copyResult" class="mini-btn" aria-label="Copy result">Copy</button>
+      <span class="tiny">v0.1.0</span>
+    </footer>
+  </div>
+  <script src="math.js"></script>
+  <script src="storage.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>
