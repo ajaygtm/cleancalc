@@ -3,6 +3,7 @@
   "name": "CleanCalc",
   "version": "0.1.1",
   "description": "Clean, minimal Firefox popup calculator with dual themes, history, percent and keyboard support.",
+  "homepage_url": "https://github.com/ajaygtm/cleancalc",
   "browser_action": {
     "default_title": "CleanCalc",
     "default_popup": "popup.html",
