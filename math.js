@@ -1,6 +1,11 @@
 // MathEngine: safe expression parser/evaluator
-// Supports: numbers, unary minus (before numbers or parentheses), + - * / %,
-// parentheses, percent postfix (50% -> 0.5), modulo (% as binary op).
+// Supports:
+//  - Numbers (decimals)
+//  - Unary minus before numbers or parentheses: -5, -(3+2), 5*-2
+//  - + - * / % (binary % is modulo)
+//  - Parentheses
+//  - Percent postfix: 50% -> (50/100)
+//  - Implicit multiplication: 2(3+4), (1+2)(3+4), 40%(50%+2), (2+3)(-4+1), (3+2)5
 // Internal error codes: BadNumber, InvalidChar, ParenMismatch, Syntax, DivZero, UnknownOp, MathErr
 
 const MathEngine = (() => {
@@ -26,22 +31,20 @@ const MathEngine = (() => {
 
     while (i < input.length) {
       let c = input[i];
-
       if (c === ' ') { i++; continue; }
 
       const prev = tokens[tokens.length - 1];
 
-      // Unary minus:
-      // Conditions: at start OR after an operator OR after '('
-      // Followed by: number (digit or '.') OR '('
+      // Unary minus: at start OR after operator OR after '('
+      // Followed by number or '('
       if (
         c === '-' &&
-        (i === 0 || (prev && (prev.type === 'op' || prev.type === '('))) 
+        (i === 0 || (prev && (prev.type === 'op' || prev.type === '(')))
       ) {
         const look = nextNonSpaceChar(i);
         if (isDigit(look) || look === '.') {
           // Negative number literal
-          let num = '-';
+            let num = '-';
             i++;
             while (i < input.length && (isDigit(input[i]) || input[i] === '.')) {
               num += input[i++];
@@ -50,13 +53,13 @@ const MathEngine = (() => {
             tokens.push({ type: 'number', value: parseFloat(num) });
             continue;
         } else if (look === '(') {
-          // Pattern: -( ... )  => treat as (-1 * ( ... )
+          // -( ... )  => -1 * ( ... )
           tokens.push({ type: 'number', value: -1 });
           tokens.push({ type: 'op', value: '*' });
-          i++; // consume only the '-' here; '(' will be tokenized in next iterations
+          i++; // consume '-' only
           continue;
         }
-        // If it wasn't followed by number or '(' treat '-' as normal operator below
+        // Else treat '-' as a normal operator
       }
 
       if (isDigit(c) || c === '.') {
@@ -149,15 +152,31 @@ const MathEngine = (() => {
     return st[0];
   }
 
+  // number% (incl negative) -> (number/100)
   function preprocessPercent(expr) {
-    // number% (allow negative number) -> (number/100)
     return expr.replace(/(-?\d+(?:\.\d+)?)%/g, "($1/100)");
+  }
+
+  // Insert explicit * for implicit multiplication patterns:
+  // Cases:
+  //   number(    -> number*( 
+  //   )(         -> )*( 
+  //   )number    -> )*number
+  //   )(negative| - ( ... ) ) handled because -( is converted earlier to -1*( by tokenizer logic
+  //   number(  after percent expansion too
+  function insertImplicitMultiplication(expr) {
+    // 1. number or ) followed directly by (
+    expr = expr.replace(/(\d|\))\s*\(/g, '$1*(');
+    // 2. ) followed by number
+    expr = expr.replace(/\)\s*(\d)/g, ')*$1');
+    return expr;
   }
 
   function evaluate(expr) {
     if (!expr.trim()) return 0;
     const prepared = preprocessPercent(expr);
-    const tokens = tokenize(prepared);
+    const implicit = insertImplicitMultiplication(prepared);
+    const tokens = tokenize(implicit);
     const rpn = toRPN(tokens);
     let val = evaluateRPN(rpn);
     if (!isFinite(val)) throw new ParseError("MathErr");
