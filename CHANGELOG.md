@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.2 - 2025-09-27
+- Added implicit multiplication (2(3+4), (1+2)(3+4), 40%(50%+2))
+- Icon refresh
+
 ## 0.1.1 - 2025-09-25
 - Added dual themes (Blue default, Beige secondary) with persisted toggle
 - Implemented unary minus (supports -5, 5*-2, -(3+2))
